@@ -60,7 +60,7 @@ EMBED_MODEL_ID   = "amazon.titan-embed-text-v2:0"
 # Constants
 # ================================================================================
 
-TOP_K          = 10    # chunks retrieved per query
+TOP_K          = 20    # chunks retrieved per query
 HISTORY_WINDOW = 5     # prior Q&A pairs injected as conversation history
 MAX_CHUNK_CHARS = 1500 # truncate individual chunks before injection
 
@@ -227,16 +227,56 @@ def _cosine_search(query_vec, embeddings, chunks, top_k):
     return indices.tolist(), scores[indices].tolist()
 
 
+MIN_CHUNKS_PER_NAMED_REPO = 2  # guaranteed slots when a repo is named
+
+
+def _repos_mentioned_in_question(question, chunks):
+    """
+    Return the set of repo names that appear verbatim in the question.
+    Only considers repos that actually exist in the corpus.
+    """
+    known_repos = {c.get("repo", "") for c in chunks}
+    q_lower     = question.lower()
+    return {r for r in known_repos if r and r in q_lower}
+
+
 def _retrieve_chunks(question, chunks, embeddings):
-    """Embed question and return top-k chunk dicts with scores."""
+    """
+    Embed question and return top-k chunk dicts with scores.
+
+    When the question explicitly names specific repos, ensure each
+    gets at least MIN_CHUNKS_PER_NAMED_REPO slots so a multi-repo
+    comparison query cannot crowd out any one provider.
+    """
     query_vec = _embed_query(question)
     indices, scores = _cosine_search(query_vec, embeddings, chunks, TOP_K)
 
+    selected_indices = set(indices)
     results = []
     for idx, score in zip(indices, scores):
         chunk = dict(chunks[idx])
         chunk["score"] = round(float(score), 4)
         results.append(chunk)
+
+    # Guarantee coverage for explicitly named repos
+    mentioned = _repos_mentioned_in_question(question, chunks)
+    for repo in mentioned:
+        present = sum(1 for c in results if c.get("repo") == repo)
+        if present >= MIN_CHUNKS_PER_NAMED_REPO:
+            continue
+        # Find the best-scoring chunks for this repo not already selected
+        repo_hits = [
+            (i, float(scores[list(indices).index(i)]) if i in indices else float(embeddings[i] @ query_vec))
+            for i, c in enumerate(chunks)
+            if c.get("repo") == repo and i not in selected_indices
+        ]
+        repo_hits.sort(key=lambda x: x[1], reverse=True)
+        needed = MIN_CHUNKS_PER_NAMED_REPO - present
+        for idx2, score2 in repo_hits[:needed]:
+            chunk = dict(chunks[idx2])
+            chunk["score"] = round(score2, 4)
+            results.append(chunk)
+            selected_indices.add(idx2)
 
     return results
 
