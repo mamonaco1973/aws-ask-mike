@@ -147,6 +147,16 @@ export async function refreshTokens() {
 // Session helpers
 // -----------------------------------------------------------------------------
 
+// Returns display name and email from the id_token payload.
+export function getUserInfo() {
+  const payload = decodeJwtPayload(getIdToken());
+  if (!payload) return { name: "", email: "" };
+  return {
+    name:  payload.name || payload.given_name || "",
+    email: payload.email || ""
+  };
+}
+
 // Checks both presence and expiration; does not attempt an async refresh.
 export function isLoggedIn() {
   const token = getIdToken();

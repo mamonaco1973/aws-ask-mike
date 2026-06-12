@@ -208,6 +208,15 @@ ul { list-style: none; }
   transition: stroke-dasharray 0.4s ease, stroke 0.4s ease;
 }
 
+.sidebar-user {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sidebar-sign-out {
   display: flex;
   align-items: center;

@@ -4,7 +4,7 @@
 /* Initializes auth, loads conversations, handles the chat input loop.        */
 /* ============================================================================ */
 
-import { isLoggedIn, getLoginUrl, clearTokens } from "./auth.js";
+import { isLoggedIn, getLoginUrl, clearTokens, getUserInfo } from "./auth.js";
 import {
   registerUser, getUsage,
   createConversation, listQueries, submitQuery,
@@ -61,6 +61,11 @@ async function boot() {
   // Show app shell
   document.getElementById("app-shell").classList.remove("hidden");
   document.getElementById("btn-sign-out").classList.remove("hidden");
+
+  const { name, email } = getUserInfo();
+  const userEl = document.getElementById("sidebar-user");
+  userEl.textContent = name || email;
+  userEl.classList.remove("hidden");
 
   // Init sidebar
   initSidebar({
