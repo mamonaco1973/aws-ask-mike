@@ -26,6 +26,8 @@ no EC2 instances required.
 
 ## How It Works
 
+![pipeline](pipeline.png)
+
 1. A one-time ingest script loads content from three sources:
    - **Local `.txt` files** in `03-ingest/` — Mike's resume, technical
      skills, YouTube channel overview, education, and contact info
