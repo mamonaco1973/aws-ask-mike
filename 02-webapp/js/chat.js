@@ -129,7 +129,7 @@ function appendAssistantMessage(text, sources, queryId) {
   if (window.marked) {
     const renderer = new window.marked.Renderer();
     renderer.link = ({ href, title, text }) =>
-      `<a href="${href}" target="_blank" rel="noopener noreferrer"${title ? ` title="${title}"` : ""}>${text}</a>`;
+      `<a href="${href}" target="_blank" rel="noopener noreferrer" title="${title || href}">${text}</a>`;
     body.innerHTML = window.marked.parse(text, { renderer });
   } else {
     body.innerHTML = text.replace(/\n/g, "<br>");
