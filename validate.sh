@@ -20,9 +20,12 @@ fi
 
 echo ""
 echo "================================================================================="
-echo "  Meet Mike — Deployment validated!"
+echo "  Ask Mike — Deployment validated!"
 echo "================================================================================="
 echo "  App : ${CUSTOM_URL}"
 echo "  S3  : ${APP_URL}/index.html"
 echo "================================================================================="
+echo ""
+echo "  Google IDP — Authorized redirect URI:"
+echo "  ${COGNITO_UI}/oauth2/idpresponse"
 echo ""

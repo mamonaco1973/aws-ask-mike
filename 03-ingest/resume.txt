@@ -1,197 +1,140 @@
-Michael Monaco — Personal Profile and Extended Resume
-======================================================
+MICHAEL MONACO
+Principal Cloud Platform Architect
+AWS Platform Ownership | Infrastructure Automation | Production Operations | AI-Enabled Cloud Architecture
+github.com/mamonaco1973 | youtube.com/@MikesCloudSolutions | linkedin.com/in/michael-monaco | Apex, NC
 
-PERSONAL SUMMARY
-----------------
-Michael Monaco is a senior cloud consultant and technical leader with over 25 years of
-software engineering and cloud architecture experience. He holds a BS in Computer Science
-from NC State University and a JD from North Carolina Central University. He is AWS
-Certified Architect (Associate, 2024).
+PROFESSIONAL SUMMARY
 
-LinkedIn: https://www.linkedin.com/in/michael-monaco/
-GitHub: https://github.com/mamonaco1973
-YouTube: https://www.youtube.com/@MikesCloudSolutions
+Principal-level cloud platform architect and hands-on technical leader who
+designs, builds, automates, and operates production cloud environments end
+to end. Deep AWS architecture experience across regulated pharmaceutical
+workloads, infrastructure as code, CI/CD, Linux, networking, IAM, storage,
+monitoring, and disaster recovery. Known for pragmatic execution,
+constructive technical challenge, and turning ambiguous problems into
+working, supportable systems. Combines rare breadth -- enterprise software
+engineering, SAS and Posit analytics platforms, GxP-aligned operations, and
+AI-enabled architecture -- with a public portfolio of 100+ deployable
+reference architectures across AWS, GCP, Azure, and OCI.
 
-Mike describes his leadership style as "a colonel, not a general" — meaning he leads by
-doing, stays technically hands-on, and contributes meaningfully at the code and
-architecture level regardless of whether he is in an individual contributor or team lead
-role. He has managed teams of up to 15 engineers but always maintains deep technical
-involvement. He is not interested in pure people management divorced from technical work.
+TECHNICAL SKILLS
 
-Mike thrives in technology consulting environments. He values the variety of moving
-across clients and projects every 6 to 18 months — it keeps the work fresh and makes
-it easy to stay motivated even through difficult engagements. He is not looking to
-relocate but is open to remote, hybrid, or on-site arrangements depending on the role.
+Cloud Platforms: AWS (primary); multi-cloud architecture across GCP, Azure, and OCI
+AWS Services: VPC, IAM, KMS, EC2, ELB, S3, RDS, DynamoDB, Lambda,
+  CloudWatch, EKS, ECS/Fargate, EFS, FSx, Storage Gateway, SQS, SNS,
+  EventBridge, API Gateway, MGN
+Infrastructure as Code: Terraform, CloudFormation, Packer
+Automation & CI/CD: GitHub Actions, GitLab CI/CD, Python (boto3), AWS CLI,
+  Bash, PowerShell
+Containers & Orchestration: Docker, Kubernetes, Amazon EKS, ECS/Fargate
+Operations: Monitoring, alerting, incident escalation, disaster recovery,
+  cost optimization, performance tuning, capacity planning, runbooks,
+  support handoff
+Systems & Identity: Linux (RHEL, Ubuntu), Windows Server, Active Directory,
+  SSSD, Centrify
+Data & Analytics Platforms: SAS 9.4, SAS Grid, SAS Studio, SAS Analytics
+  Pro, SAS Viya, Posit Workbench / Connect / Package Manager, RStudio
+AI & Modern Workloads: Cloud-native AI services, LLM document processing,
+  agent deployments, containerized GenAI workloads, AI-assisted development,
+  AI-accelerated build patterns
+Regulated Environments: Pharma, FDA / GxP-aligned operations, HIPAA
+  exposure, governance, access control, documentation, disaster recovery
 
+SELECTED ACCOMPLISHMENTS
 
-CURRENT ROLE — Instem, Manager of Cloud Consultants (November 2022 – present)
-------------------------------------------------------------------------------
-Instem is a pharmaceutical and life sciences software company. Mike's work at Instem
-is entirely pharmaceutical industry work. All of his clients at Instem are pharma
-companies or CROs (Contract Research Organizations). This is a continuation of his
-pharmaceutical industry career that also includes his time at d-wise.
+- Designed, built, automated, and operated production AWS environments for
+  pharmaceutical and CRO clients under strict governance and FDA-regulated
+  requirements, spanning 25+ production SaaS tenants and 10+ bespoke cloud
+  consulting engagements
+- Delivered regulated cloud solutions for 20+ pharmaceutical and CRO
+  clients, supporting user populations ranging from small teams to 2,000+
+  users
+- Automated repeatable cloud deployment patterns using Terraform,
+  CloudFormation, Packer, GitHub Actions, GitLab CI/CD, Python, Bash,
+  PowerShell, and AWS-native services
+- Built Lambda-based automation to power down idle SAS analytics compute on
+  weekends, reducing compute cost for those workloads by ~30%
+- Designed cloud disaster recovery and enterprise storage architectures
+  using S3, FSx for Lustre, FSx for NetApp ONTAP, Storage Gateway, and
+  Nasuni -- cross-region warm-standby with ~15-minute actual RPO via NetApp
+  SnapMirror
+- Containerized SAS 9.4 workloads with Docker and integrated them with
+  Amazon EKS for orchestrated, scalable execution
+- Led SAS Studio from inception to launch; contributed to SAS Analytics
+  Pro for AWS
+- Built and published 100+ deployable reference architectures across AWS,
+  GCP, Azure, and OCI as open source on GitHub
+- Developed AI-enabled cloud architecture examples: LLM document
+  processing, agent deployments, RAG pipelines, containerized GenAI
+  workloads, and AI-accelerated build patterns
 
-Mike leads a team of 5 cloud consultants at Instem. His primary focus is architecting
-and delivering AWS and Azure cloud migrations for SAS analytical applications at
-pharmaceutical and CRO clients in highly regulated, FDA-compliant environments.
+PROFESSIONAL EXPERIENCE
 
-Over his tenure at Instem, Mike has consulted at over two dozen pharma and CRO clients,
-ranging from small boutique organizations to some of the largest pharmaceutical companies
-and contract research organizations in the world. Deployments ranged from 6-user pilot
-environments to enterprise rollouts supporting over 2,000 users. Most clients adopted
-AWS, with some adopting Azure.
+Instem | Nov 2022 - Present
+Manager of Cloud Consultants
 
-The typical architecture was production in one AWS or Azure region with a failover
-environment in a secondary region for disaster recovery. RTO targets were typically
-one day; RPO targets were typically one hour. Some implementations used automated
-failover — load balancers redirected by DNS changes, backed by autoscaling groups.
-Others were manual failover procedures, typical of RDP-based SaaS delivery models.
-For the data layer, NetApp with SnapMirror replication was the standard approach
-across implementations.
+- Own full-lifecycle delivery of production AWS environments for pharma
+  clients: architecture, implementation, steady-state operations,
+  troubleshooting, optimization, documentation, and support
+- Design AWS platforms aligned to FDA-regulated and client governance
+  requirements: VPC, IAM, KMS, networking, storage, monitoring, DR
+- Serve as senior AWS technical owner and escalation point across client
+  engineering, infrastructure, security, and application teams
+- Deploy and manage environments as code using Terraform, CloudFormation,
+  GitHub Actions, GitLab CI/CD, Python (boto3), AWS CLI, Bash, PowerShell
+- Design enterprise storage and DR architectures: S3, FSx for Lustre,
+  FSx for NetApp ONTAP, Storage Gateway, Nasuni, cross-region SnapMirror
+- Containerize SAS 9.4 with Docker + EKS; deploy and administer Posit
+  Workbench, Posit Connect, and Posit Package Manager in regulated envs
+- Lead and mentor a team of 5 cloud consultants; contribute to pre-sales
+  via statements of work, RFI responses, and executive walkthroughs
 
-Mike deployed and administered the full Posit data science platform stack — Posit
-Workbench, Posit Connect, and Posit Package Manager — in regulated cloud environments
-supporting pharmaceutical analytics workloads under FDA compliance requirements.
+Mike's Cloud Solutions | Nov 2024 - Present
+Founder and Cloud Solutions Architect
 
-He designed storage solutions using Nasuni, AWS Storage Gateway, Lustre FSX, and
-FSX for NetApp ONTAP. He developed Docker containers for running SAS 9.4 and
-integrated them with AWS Elastic Kubernetes Service (EKS).
+- Built and published 100+ deployable reference architectures across AWS,
+  GCP, Azure, and OCI -- all open source on GitHub
+- Portfolio covers: IaC, serverless, Kubernetes, managed databases,
+  RStudio clusters, identity services, shared file systems, virtual
+  desktops, image pipelines, queue-driven workers, AI services, multi-cloud
+- Produce technical YouTube walkthroughs translating complex cloud
+  architecture into practical, build-oriented guidance
+- Build AI-focused examples: cloud-native AI services, LLM processing,
+  agent deployments, RAG demos, containerized GenAI workloads
 
-A notable piece of engineering was a Lambda-based cold start solution for SAS
-autoscaling clusters. The problem: to control compute costs, SAS clusters were scaled
-down to zero nodes during idle periods. The Lambda function automatically triggered
-the autoscaling group to bring the cluster back to one node, allowing SAS services
-to restart without manual intervention. This gave clients cost savings without
-sacrificing the ability to resume work quickly.
+d-wise | Mar 2020 - Nov 2022
+Senior Cloud Consultant
 
-Mike led multiple Active Directory integration projects. His AD experience includes:
-- Self-hosted Active Directory on EC2 and on-premises
-- AWS Managed Microsoft AD
-- Azure AD and Entra ID, including two-way trust configurations
-- Linux host authentication using SSSD and Centrify
-- SAML and OIDC federation, primarily with Okta
-- Group Policy Objects (GPOs) for Linux and Windows hosts
-- Single sign-on integrations for SAS and other analytical platforms
+- Designed cloud-native replacements for SAS Grid on AWS and Azure
+- Built and supported SAS Grid for pharmaceutical clients with regulated
+  clinical data
+- Linux administration, scripting, and automation using Python, Bash,
+  PowerShell across client analytics environments
 
-He deployed cloud infrastructure using Terraform and CloudFormation through CI/CD
-pipelines in GitLab and GitHub, following DevOps principles in a highly regulated
-pharmaceutical and FDA-compliance environment.
+SAS Institute | 2013 - 2018
+Director, SAS Studio
 
+- Led SAS Studio from inception through launch: product direction,
+  architecture, engineering leadership, platform integration
+- Contributed to SAS Analytics Pro for AWS (SAS Studio + EC2 deployment)
+- Managed and mentored 12-15 software engineers in Agile/DevOps culture
 
-YOUTUBE CHANNEL — Mike's Cloud Solutions (November 2024 – present)
--------------------------------------------------------------------
-Mike created and manages Mike's Cloud Solutions, a YouTube channel at
-https://www.youtube.com/@MikesCloudSolutions (120,000 subscribers, 3.5 million
-views as of mid-2026). GitHub portfolio: https://github.com/mamonaco1973
-LinkedIn: https://www.linkedin.com/in/michael-monaco/
+SAS Institute | 2007 - 2013
+Senior Software Manager
 
-Mike's channel has 120,000 subscribers and over
-over 3.0 million total views as of mid-2026.
+- Directed SAS Retail Space Management for Target, Walmart, and Publix
+- Managed 4-6 engineers; led team transition from waterfall to Agile
 
-The content is approximately 50% beginner-accessible tutorials and 50% advanced
-architecture walkthroughs. Topics span AWS, Azure, GCP, and OCI, with a strong
-emphasis on Infrastructure as Code using Terraform and Packer.
+SAS Institute | 2000 - 2007
+Software Engineer and Technical Lead
 
-The most popular video is the AWS Workspace Bundle Builder (wbuilder) — a tool for
-automating Amazon WorkSpaces bundle creation in a Packer-like workflow. There was
-nothing like it publicly available, which drove its popularity. The second most
-popular series is OpenClaw, a multi-cloud open source project.
+- Architected SAS Digital Marketing: distributed high-volume email delivery
+- Developed core SAS procedures: PROC HTTP, SOAP, PWENCODE, XSL, METADATA,
+  METACLEANSE
 
-Other popular content includes tutorials on RStudio deployment across AWS, Azure,
-and GCP; Kubernetes and container walkthroughs; Active Directory integration in
-cloud environments; serverless architectures; and cloud desktop (XRDP/VDI) setups.
+CERTIFICATIONS
 
-Mike's goal with the channel is to produce real-world, production-quality
-demonstrations rather than toy examples — the kind of content he wished existed
-when he was learning these platforms himself.
-
-
-PREVIOUS ROLE — d-wise, Senior Cloud Consultant (March 2020 – November 2022)
------------------------------------------------------------------------------
-At d-wise, a pharmaceutical technology consulting firm, Mike supported and built
-SAS Grid deployments for pharma clients and provided Linux administration and IT
-support. He designed and implemented replacements for legacy SAS Grid environments
-using cloud-native services on AWS and Azure.
-
-The SAS Grid replacement architecture used containerized SAS 9.4 running on AWS
-Elastic Kubernetes Service (EKS) and Azure Kubernetes Service (AKS), achieving
-on-demand autoscaling based on workload rather than the fixed-capacity model of
-traditional SAS Grid. This delivered significant infrastructure cost savings and
-improved elasticity for pharma analytics workloads.
-
-Mike also built custom SAS macros and optimized SAS and SQL code for pharmaceutical
-clients. He has strong scripting skills in Bash, PowerShell, and Python.
-
-
-PREVIOUS ROLE — SAS Institute, Director and Engineering Lead (2000 – 2018)
----------------------------------------------------------------------------
-Mike spent approximately 18 years at SAS Institute in progressively senior roles.
-
-As Director (2013–2018), he led the development and launch of SAS Studio, the
-web-based IDE for SAS. SAS Studio is a widely used product globally, delivered
-as part of the core SAS platform. He led a team of 12–15 software engineers in
-an Agile environment. He developed the XML framework for SAS Studio tasks, which
-generates SAS and SQL code from a point-and-click interface. He integrated SAS
-Studio with SAS Enterprise Guide and designed RESTful SAS microservices using
-Java, Spring, and Spring Boot. He also worked on SAS Analytics Pro for AWS,
-combining SAS Studio with EC2 deployments. He authored papers and presented at
-SAS Global Forum.
-
-As Senior Software Manager (2007–2013), he oversaw the development of SAS Retail
-Space Management, integrating the MarketMax Space Planning product into the SAS
-ecosystem. He managed 4–6 engineers and led the team's transition from waterfall
-to Agile. He worked with large retail clients including Target, Walmart, and Publix
-on complex data management and SQL optimization challenges.
-
-As Software Engineer and Technical Lead (2000–2007), he pioneered SAS Digital
-Marketing, a distributed server system for sending large volumes of customized
-email. He led SAS's replacement of its external email marketing vendor with the
-internally built SAS Digital Marketing product, saving $50,000 per year in
-licensing fees. He developed several core SAS PROCs and datastep functions
-including PROC HTTP, SOAP, PWENCODE, XSL, METADATA, and METACLEANSE. He worked
-on core SAS user interfaces including DMS and SAS Enterprise Guide. His coding
-experience at SAS includes C, Java, PHP, SAS Macro, and JavaScript with the
-Dojo toolkit.
-
-
-TECHNICAL SKILLS SUMMARY
--------------------------
-Cloud Platforms: AWS (primary), Azure, GCP, OCI
-AWS Services: EC2, ELB, EKS, RDS, S3, IAM, VPC, KMS, EFS, FSX, Lambda,
-              Autoscaling, WorkSpaces, Bedrock, SQS, API Gateway, DynamoDB,
-              Cognito, CloudFormation
-Azure Services: AKS, Azure AD, Entra ID, Azure Functions, Cosmos DB,
-                Service Bus, Azure Storage
-IaC and Automation: Terraform (primary), Packer, CloudFormation, GitLab CI,
-                    GitHub Actions
-Containers and Orchestration: Docker, Kubernetes (EKS, AKS, GKE)
-Identity and Access: Active Directory, AWS Managed AD, Azure AD/Entra ID,
-                     SSSD, Centrify, Okta (SAML/OIDC), GPOs, two-way trusts
-Storage: NetApp ONTAP, SnapMirror, Nasuni, Storage Gateway, Lustre FSX,
-         FSX NetApp, EFS
-SAS Platform: SAS 9.4, SAS Studio, SAS Grid, SAS Enterprise Guide,
-              SAS Macro, SAS Digital Marketing, Posit Workbench,
-              Posit Connect, Posit Package Manager
-Programming: Python, Bash, PowerShell, Java, JavaScript, C, PHP, SQL
-Regulated Industries: Pharma, FDA compliance, GxP environments
-Certifications: AWS Certified Solutions Architect – Associate (2024)
-
+- AWS Certified Solutions Architect - Associate
 
 EDUCATION
----------
-BS, Computer Science — NC State University
-JD — North Carolina Central University
 
-
-WHAT MIKE IS LOOKING FOR
--------------------------
-Mike is looking for a senior individual contributor or technical lead role in
-cloud consulting or cloud architecture. He wants to remain hands-on technically —
-writing Terraform, reviewing pull requests, designing architectures, contributing
-code — while having the opportunity to lead and mentor when appropriate.
-
-He prefers a consulting model where he works across multiple clients and projects
-over time, typically 6–18 months per engagement. The variety of consulting keeps
-him engaged and energized. He is location-flexible for the right opportunity but
-is not willing to relocate permanently. Remote, hybrid, and on-site arrangements
-are all acceptable depending on the role.
+- B.S. Computer Science, North Carolina State University

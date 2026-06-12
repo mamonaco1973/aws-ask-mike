@@ -1,10 +1,9 @@
-# Meet Mike — AI Interview Assistant
+# Ask Mike — Cloud Architecture Assistant
 
-**Meet Mike** is a ChatGPT-style AI assistant trained on Mike Monaco's
-background, experience, cloud portfolio, and career history. Visitors and
-hiring managers can ask natural language questions about Mike's work,
-skills, and what he is looking for — and get answers grounded in real
-content.
+**Ask Mike** is a ChatGPT-style AI assistant grounded in Mike Monaco's
+cloud reference architecture portfolio, YouTube channel, and open-source
+GitHub repos. Ask questions about architectures, compare cloud providers,
+or explore how any of the 100+ published projects were built.
 
 Built on **AWS Lambda**, **Amazon API Gateway**, **Amazon DynamoDB**,
 **Amazon SQS**, **Amazon Bedrock**, and **Amazon S3** — fully serverless,
@@ -14,25 +13,22 @@ no EC2 instances required.
 
 ## What You Can Ask
 
-- "Tell me about yourself" / career overview
-- "Why are you looking for a new role?"
-- "What is your greatest technical accomplishment?"
-- "Tell me about Mike's pharma experience"
-- "How does Mike approach a cloud migration engagement?"
-- "What is Mike's leadership style?"
-- "Tell me about running RStudio in the cloud"
-- "Tell me about Active Directory in the cloud"
-- "How many YouTube subscribers does Mike have?"
-- "What is Mike looking for in his next role?"
+- "What reference architectures has Mike published on GitHub?"
+- "What topics does Mike's YouTube channel cover?"
+- "How does his AWS serverless CRUD architecture work?"
+- "What AI and ML projects has Mike built?"
+- "How does Mike compare AWS, GCP, Azure, and OCI for serverless?"
+- "How does Mike's RStudio cluster handle shared storage and identity?"
+- "Tell me about Mike's Bedrock RAG demo"
+- "What Kubernetes projects has Mike published?"
 
 ## How It Works
 
 1. A one-time ingest script loads content from three sources:
-   - **Local `.txt` files** in `03-ingest/` — Mike's resume, career history,
-     interview Q&A, pharma experience, SAS background, YouTube channel facts,
-     and contact info, each in focused single-topic files for precise retrieval
+   - **Local `.txt` files** in `03-ingest/` — Mike's resume, technical
+     skills, YouTube channel overview, education, and contact info
    - **GitHub repos** — README.md and CLAUDE.md from all public
-     `mamonaco1973/*` repositories
+     `mamonaco1973/*` repositories (primary corpus source)
    - **YouTube** — video descriptions from Mike's Cloud Solutions channel
 
    Each source is chunked, embedded via **Bedrock Titan Embeddings v2**,

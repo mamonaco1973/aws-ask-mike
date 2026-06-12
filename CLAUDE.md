@@ -5,15 +5,14 @@ with code in this repository.
 
 ## What This App Does
 
-Meet Mike — a ChatGPT-style AI interview assistant trained on Mike Monaco's
-background, career history, cloud portfolio, and interview Q&A. Visitors
-and hiring managers can ask natural language questions about Mike's
-experience, skills, pharma work, SAS background, YouTube channel, and what
-he is looking for in his next role. Answers are grounded in a curated corpus
-of focused topic files, GitHub READMEs, and YouTube video descriptions
-indexed into a vector corpus. Conversations are stateful (last 5 Q&A pairs
-injected as history per query). Token usage is tracked per user in DynamoDB
-with a 500K lifetime cap.
+Ask Mike -- a ChatGPT-style AI assistant grounded in Mike Monaco's cloud
+reference architecture portfolio, YouTube channel, and open-source GitHub
+repos. Visitors can ask questions about architectures, compare patterns
+across cloud providers, or explore how any of the 100+ published projects
+were built. Answers are grounded in GitHub READMEs, YouTube video
+descriptions, and a small set of background files. Conversations are
+stateful (last 5 Q&A pairs injected as history per query). Token usage is
+tracked per user in DynamoDB with a 500K lifetime cap.
 
 ## Architecture
 
@@ -94,10 +93,10 @@ python ingest.py --bucket <backend-bucket-name>
 ```
 
 The ingest script loads content from three sources:
-- Local `.txt` files in `03-ingest/` — focused single-topic files covering
-  Mike's career, pharma experience, SAS background, YouTube channel, contact
-  info, and interview Q&A (one file per interview question for best retrieval)
-- All public `mamonaco1973/*` GitHub repos (README.md and CLAUDE.md only)
+- Local `.txt` files in `03-ingest/` — resume, technical skills, YouTube
+  channel overview, education, and contact info
+- All public `mamonaco1973/*` GitHub repos (README.md and CLAUDE.md only) —
+  primary corpus source for reference architecture content
 - YouTube video descriptions from Mike's Cloud Solutions channel
 
 All content is embedded via Bedrock Titan and written as `corpus/chunks.json`
