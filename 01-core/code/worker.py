@@ -242,6 +242,63 @@ def _retrieve_chunks(question, chunks, embeddings):
 
 
 # ================================================================================
+# Inventory queries — bypass cosine search, enumerate corpus directly
+# ================================================================================
+
+_GITHUB_TRIGGERS  = {"github", "repo", "repos", "repository", "repositories",
+                     "project", "projects", "portfolio"}
+_YOUTUBE_TRIGGERS = {"youtube", "video", "videos", "channel"}
+_LIST_TRIGGERS    = {"complete", "full", "all", "every", "list", "inventory"}
+
+
+def _is_github_inventory_query(question):
+    words = set(question.lower().split())
+    return bool(words & _GITHUB_TRIGGERS) and bool(words & _LIST_TRIGGERS)
+
+
+def _is_youtube_inventory_query(question):
+    words = set(question.lower().split())
+    return bool(words & _YOUTUBE_TRIGGERS) and bool(words & _LIST_TRIGGERS)
+
+
+def _build_github_inventory(chunks):
+    """Return a markdown list of every unique GitHub repo in the corpus."""
+    seen = {}
+    for chunk in chunks:
+        repo = chunk.get("repo", "")
+        if repo in ("resume", "youtube", ""):
+            continue
+        if repo not in seen:
+            url = chunk.get("source_url", "")
+            # Strip /blob/main/... to get the repo root URL
+            repo_root = url.split("/blob/")[0] if "/blob/" in url else url
+            seen[repo] = repo_root
+
+    lines = [f"Here are all {len(seen)} GitHub repositories in my portfolio:\n"]
+    for repo in sorted(seen.keys()):
+        url = seen[repo]
+        lines.append(f"- [{repo}]({url})" if url else f"- {repo}")
+    return "\n".join(lines)
+
+
+def _build_youtube_inventory(chunks):
+    """Return a markdown list of every unique YouTube video in the corpus."""
+    seen = {}
+    for chunk in chunks:
+        if chunk.get("repo") != "youtube":
+            continue
+        title = chunk.get("title", "").strip()
+        url   = chunk.get("source_url", "").strip()
+        if title and url and title not in seen:
+            seen[title] = url
+
+    lines = [f"Here are all {len(seen)} YouTube videos on my channel:\n"]
+    for title in sorted(seen.keys()):
+        lines.append(f"- [{title}]({seen[title]})")
+    return "\n".join(lines)
+
+
+# ================================================================================
 # Conversation history
 # ================================================================================
 
@@ -416,6 +473,32 @@ def process_query(user_id, conv_id, query_id):
     except Exception as exc:
         logger.exception("Failed to load corpus from S3")
         _fail_query(user_id, conv_id, query_id, f"Corpus unavailable: {exc}")
+        return
+
+    # -------------------------------------------------------------------------
+    # Inventory short-circuit — skip embedding + Haiku for list-all queries
+    # -------------------------------------------------------------------------
+
+    inventory_answer = None
+    if _is_youtube_inventory_query(question):
+        inventory_answer = _build_youtube_inventory(chunks)
+    elif _is_github_inventory_query(question):
+        inventory_answer = _build_github_inventory(chunks)
+
+    if inventory_answer is not None:
+        prefix      = _s3_prefix(user_id, conv_id, query_id)
+        answer_key  = f"{prefix}/answer.txt"
+        sources_key = f"{prefix}/sources.json"
+        try:
+            _write_s3_text(answer_key, inventory_answer)
+            _write_s3_json(sources_key, [])
+        except Exception as exc:
+            logger.exception("Failed to write inventory answer to S3")
+            _fail_query(user_id, conv_id, query_id, f"Failed to store result: {exc}")
+            return
+        _finalize_query(user_id, conv_id, query_id, answer_key, sources_key, 0)
+        logger.info("Inventory query complete. user=%s conv=%s query=%s",
+                    user_id, conv_id, query_id)
         return
 
     # -------------------------------------------------------------------------

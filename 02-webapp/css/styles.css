@@ -94,6 +94,27 @@ ul { list-style: none; }
 .new-chat-btn:hover { background: rgba(255,255,255,0.15); }
 .new-chat-btn svg { flex-shrink: 0; }
 
+.sidebar-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.sidebar-link-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #f1f5f9;
+}
+.sidebar-link-btn svg { flex-shrink: 0; }
+.sidebar-link-btn--yt { color: #f87171; }
+.sidebar-link-btn--yt:hover { color: #fca5a5; }
+
 /* Conversation list */
 
 #conv-list {
