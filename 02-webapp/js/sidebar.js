@@ -98,6 +98,7 @@ function _buildItem(conv) {
   const item = document.createElement("div");
   item.className = "conv-item" + (conv.conv_id === _activeConvId ? " active" : "");
   item.dataset.convId = conv.conv_id;
+  item.title = conv.title || "Untitled";
 
   const title = document.createElement("span");
   title.className = "conv-item-title";
