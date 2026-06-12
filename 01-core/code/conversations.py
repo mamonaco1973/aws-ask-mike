@@ -290,7 +290,7 @@ def _maybe_set_conv_title(user_id, conv_id, question, now):
 
     # Only overwrite the placeholder title set at creation time
     if item.get("title") == "New conversation":
-        title = question[:60] + ("…" if len(question) > 60 else "")
+        title = question
         table.update_item(
             Key={"pk": pk, "sk": sk},
             UpdateExpression="SET title = :t, updated_at = :u",

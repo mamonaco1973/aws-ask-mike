@@ -76,7 +76,8 @@ ul { list-style: none; }
 #sidebar-header {
   padding: 12px 10px 10px;
   flex-shrink: 0;
-  background: linear-gradient(160deg, #1e3a5f 0%, #2d6cdf 60%, #4f9cf9 100%);
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
 }
 
 .new-chat-btn {
@@ -86,12 +87,12 @@ ul { list-style: none; }
   width: 100%;
   padding: 10px 12px;
   border-radius: var(--radius);
-  color: #f1f5f9;
+  color: var(--text-primary);
   font-size: 0.93rem;
   font-weight: 500;
   transition: background 0.15s;
 }
-.new-chat-btn:hover { background: rgba(255,255,255,0.15); }
+.new-chat-btn:hover { background: var(--bg-hover); }
 .new-chat-btn svg { flex-shrink: 0; }
 
 .sidebar-link-btn {
@@ -101,21 +102,21 @@ ul { list-style: none; }
   width: 100%;
   padding: 8px 12px;
   border-radius: var(--radius);
-  color: #cbd5e1;
+  color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: 400;
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
 .sidebar-link-btn:hover {
-  background: rgba(255,255,255,0.1);
-  color: #f1f5f9;
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 .sidebar-link-btn svg { flex-shrink: 0; }
-.sidebar-link-btn--yt { color: #f87171; }
-.sidebar-link-btn--yt:hover { color: #fca5a5; }
-.sidebar-link-btn--li { color: #7dd3fc; }
-.sidebar-link-btn--li:hover { color: #bae6fd; }
+.sidebar-link-btn--yt { color: #dc2626; }
+.sidebar-link-btn--yt:hover { color: #b91c1c; }
+.sidebar-link-btn--li { color: #0a66c2; }
+.sidebar-link-btn--li:hover { color: #004182; }
 
 /* Conversation list */
 
