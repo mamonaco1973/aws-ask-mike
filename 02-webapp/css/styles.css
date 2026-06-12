@@ -599,6 +599,15 @@ ul { list-style: none; }
   gap: 16px;
 }
 
+.auth-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
 .auth-preview-logo {
   font-size: 38px;
   font-weight: 700;
