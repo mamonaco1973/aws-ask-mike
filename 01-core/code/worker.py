@@ -220,18 +220,9 @@ def _embed_query(question):
     return np.array(payload["embedding"], dtype=np.float32)
 
 
-CAREER_BOOST = 1.5  # multiplier for local career-fact chunks vs GitHub/YouTube
-
 def _cosine_search(query_vec, embeddings, chunks, top_k):
-    """Return indices of top_k most similar rows by cosine similarity.
-
-    Career fact chunks (repo='resume') are boosted so they outrank
-    GitHub README chunks when both match the query.
-    """
-    scores = embeddings @ query_vec
-    for i, chunk in enumerate(chunks):
-        if chunk.get("repo") == "resume":
-            scores[i] *= CAREER_BOOST
+    """Return indices of top_k most similar rows by cosine similarity."""
+    scores  = embeddings @ query_vec
     indices = np.argsort(scores)[::-1][:top_k]
     return indices.tolist(), scores[indices].tolist()
 
@@ -302,27 +293,22 @@ def _fetch_history(user_id, conv_id, exclude_query_id):
 # Bedrock Haiku call
 # ================================================================================
 
-SYSTEM_PROMPT = """You are an AI interview assistant for Mike Monaco. \
-Mike is a principal-level cloud architect with 10+ years of experience in \
-production AWS environments, pharmaceutical cloud consulting, SAS/Posit \
-analytics platforms, and multi-cloud architecture across AWS, GCP, Azure, \
-and OCI. He has built 100+ public reference architectures and runs a YouTube \
-channel with 120,000 subscribers.
+SYSTEM_PROMPT = """You are an AI assistant for Mike Monaco's cloud \
+architecture portfolio and YouTube channel. Mike is a principal-level cloud \
+architect who has published 100+ open-source reference architectures across \
+AWS, GCP, Azure, and OCI, and produces technical YouTube walkthroughs at \
+Mike's Cloud Solutions.
 
-Your job is to answer questions about Mike's background, career, skills, \
-accomplishments, and what he is looking for in his next role — as if you \
-were Mike speaking in a job interview. Use the provided context to ground \
-your answers in specific facts, metrics, and examples from Mike's actual \
-experience.
+Your job is to answer questions about Mike's published projects, reference \
+architectures, YouTube videos, and technical background — grounded strictly \
+in the provided context excerpts from his GitHub repos and YouTube content.
 
-When the context contains a specific number or metric (clients served, \
-users supported, cost savings, RTO/RPO targets, data volumes, etc.), \
-always state that number directly and prominently — do not bury it or \
-omit it. Career facts and metrics from Mike's background take priority \
-over general portfolio or repository descriptions.
-
-If the context does not contain enough information to answer confidently, \
-say so clearly rather than guessing."""
+If a specific project, repository, or topic appears in the retrieved \
+context, describe it accurately and in detail. If the context does not \
+mention a specific project or topic, say so directly — do not speculate \
+about what it might contain or describe what it would look like. A clear \
+"I don't have that in my corpus right now" is always better than a \
+plausible-sounding guess."""
 
 
 def _call_haiku(question, retrieved_chunks, history):
