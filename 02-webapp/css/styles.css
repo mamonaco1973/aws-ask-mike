@@ -712,8 +712,11 @@ ul { list-style: none; }
 #sidebar-toggle:hover { background: var(--bg-hover); }
 
 @media (min-width: 641px) {
-  html, body { font-size: 16.5px; }
-  .msg-row   { padding: 6px 80px; }
+  html, body  { font-size: 16.5px; }
+  .msg-row    { padding: 6px 100px; }
+  #empty-state { padding: 40px 100px; }
+  .starter-grid { max-width: 100%; }
+  #input-bar  { padding: 12px 100px 20px; }
 }
 
 @media (max-width: 640px) {
