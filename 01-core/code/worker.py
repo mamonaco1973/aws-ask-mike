@@ -261,23 +261,167 @@ def _is_youtube_inventory_query(question):
     return bool(words & _YOUTUBE_TRIGGERS) and bool(words & _LIST_TRIGGERS)
 
 
+_CLOUD_PREFIXES = ["aws-", "gcp-", "azure-", "oci-"]
+_CLOUD_ORDER    = ["aws", "gcp", "azure", "oci"]
+
+# Repos with different per-cloud suffixes that represent the same architecture
+_ARCH_ALIASES = {
+    "rstudio-eks":      "rstudio-k8s",
+    "rstudio-gke":      "rstudio-k8s",
+    "rstudio-aks":      "rstudio-k8s",
+    "mig":              "autoscaling",
+    "vmss":             "autoscaling",
+    "instance-pool":    "autoscaling",
+    "flask-mig":        "flask-asg",
+    "flask-vmss":       "flask-asg",
+    "directory":        "active-directory",
+    "managed-ad":       "active-directory",
+    "virtual-desktops": "workspaces",
+    "identity-app":     "cognito-app",
+    "entra-app":        "cognito-app",
+    "mesh":             "transit-gateway",
+    "wlan":             "transit-gateway",
+    "filestore":        "efs",
+    "nfs-files":        "efs",
+    "fss":              "efs",
+    "dms":              "data-sync",
+    "pubsub-keygen":    "sqs-keygen",
+    "sb-keygen":        "sqs-keygen",
+}
+
+_ARCH_DISPLAY = {
+    "postgres":         "PostgreSQL",
+    "mysql":            "MySQL",
+    "sqlserver":        "SQL Server",
+    "rstudio-cluster":  "RStudio cluster",
+    "rstudio-k8s":      "RStudio on Kubernetes",
+    "k8s":              "Kubernetes",
+    "autoscaling":      "Autoscaling (ASG / MIG / VMSS / Pools)",
+    "flask-asg":        "Autoscaled Flask app",
+    "flask-container":  "Containerized Flask app",
+    "packer":           "Image pipelines (Packer)",
+    "active-directory": "Managed directory services",
+    "mini-ad":          "Minimal AD (lab-scale)",
+    "workspaces":       "Managed virtual desktops",
+    "xubuntu-xrdp":     "Linux remote desktops (xRDP)",
+    "cognito-app":      "App auth (Cognito / Identity Platform / Entra)",
+    "transit-gateway":  "Hub-and-spoke networking",
+    "efs":              "Shared file systems (EFS / Filestore / Files / FSS)",
+    "data-sync":        "Data migration",
+    "crud-example":     "Serverless CRUD API",
+    "serverless-mcp":   "Serverless MCP service",
+    "sqs-keygen":       "Queue-driven workers (SQS / Pub/Sub / Service Bus)",
+    "cartoonify":       "Cartoonify (vision AI image transformation)",
+    "openclaw":         "OpenClaw agent deployment",
+    "resume-app":       "Resume app (LLM document processing)",
+    "rag-demo":         "RAG demo (Meet Mike)",
+    "ask-mike":         "Ask Mike (this app)",
+}
+
+_ARCH_CATEGORY = {
+    "postgres":         "Databases & Analytics",
+    "mysql":            "Databases & Analytics",
+    "sqlserver":        "Databases & Analytics",
+    "rstudio-cluster":  "Databases & Analytics",
+    "rstudio-k8s":      "Databases & Analytics",
+    "k8s":              "Compute & Containers",
+    "autoscaling":      "Compute & Containers",
+    "flask-asg":        "Compute & Containers",
+    "flask-container":  "Compute & Containers",
+    "packer":           "Compute & Containers",
+    "active-directory": "Identity & Desktops",
+    "mini-ad":          "Identity & Desktops",
+    "workspaces":       "Identity & Desktops",
+    "xubuntu-xrdp":     "Identity & Desktops",
+    "cognito-app":      "Identity & Desktops",
+    "transit-gateway":  "Networking & Storage",
+    "efs":              "Networking & Storage",
+    "data-sync":        "Networking & Storage",
+    "crud-example":     "Serverless",
+    "serverless-mcp":   "Serverless",
+    "sqs-keygen":       "Serverless",
+    "cartoonify":       "AI Services",
+    "openclaw":         "AI Services",
+    "resume-app":       "AI Services",
+    "rag-demo":         "AI Services",
+    "ask-mike":         "AI Services",
+}
+
+_CATEGORY_ORDER = [
+    "Databases & Analytics",
+    "Compute & Containers",
+    "Identity & Desktops",
+    "Networking & Storage",
+    "Serverless",
+    "AI Services",
+    "Other",
+]
+
+
 def _build_github_inventory(chunks):
-    """Return a markdown list of every unique GitHub repo in the corpus."""
-    seen = {}
+    """Return a cross-cloud matrix of every GitHub repo in the corpus."""
+    # Collect all GitHub repos: repo_name → root URL
+    repos = {}
     for chunk in chunks:
         repo = chunk.get("repo", "")
-        if repo in ("resume", "youtube", ""):
+        if repo in ("resume", "youtube", "") or repo in repos:
             continue
-        if repo not in seen:
-            url = chunk.get("source_url", "")
-            # Strip /blob/main/... to get the repo root URL
-            repo_root = url.split("/blob/")[0] if "/blob/" in url else url
-            seen[repo] = repo_root
+        url  = chunk.get("source_url", "")
+        repos[repo] = url.split("/blob/")[0] if "/blob/" in url else url
 
-    lines = [f"Here are all {len(seen)} GitHub repositories in my portfolio:\n"]
-    for repo in sorted(seen.keys()):
-        url = seen[repo]
-        lines.append(f"- [{repo}]({url})" if url else f"- {repo}")
+    # Parse each repo into cloud + base architecture
+    # matrix[base_arch][cloud] = url
+    matrix       = {}
+    uncategorized = {}
+
+    for repo_name, url in repos.items():
+        cloud = base = None
+        for prefix in _CLOUD_PREFIXES:
+            if repo_name.startswith(prefix):
+                cloud = prefix.rstrip("-")
+                base  = _ARCH_ALIASES.get(repo_name[len(prefix):],
+                                          repo_name[len(prefix):])
+                break
+        if cloud is None:
+            uncategorized[repo_name] = url
+            continue
+        if base not in matrix:
+            matrix[base] = {}
+        matrix[base][cloud] = url
+
+    # Group architectures by category
+    by_category = {cat: [] for cat in _CATEGORY_ORDER}
+    for base, cloud_map in matrix.items():
+        cat = _ARCH_CATEGORY.get(base, "Other")
+        by_category[cat].append((base, cloud_map))
+
+    total_repos = len(repos)
+    lines = [f"## GitHub Portfolio — {total_repos} repositories\n",
+             "**Legend:** ✅ built & deployable · 🚧 planned / not yet built\n"]
+
+    for cat in _CATEGORY_ORDER:
+        archs = sorted(by_category[cat],
+                       key=lambda x: _ARCH_DISPLAY.get(x[0], x[0]))
+        if not archs:
+            continue
+        lines.append(f"\n### {cat}\n")
+        lines.append("| Architecture | AWS | GCP | Azure | OCI |")
+        lines.append("|---|:---:|:---:|:---:|:---:|")
+        for base, cloud_map in archs:
+            display = _ARCH_DISPLAY.get(base, base.replace("-", " ").title())
+            cells   = []
+            for cloud in _CLOUD_ORDER:
+                u = cloud_map.get(cloud)
+                cells.append(f"[✅]({u})" if u else "🚧")
+            lines.append(f"| {display} | {' | '.join(cells)} |")
+
+    # Surface repos that don't follow the <cloud>-<arch> naming pattern
+    if uncategorized:
+        lines.append("\n### Other\n")
+        for name in sorted(uncategorized):
+            u = uncategorized[name]
+            lines.append(f"- [{name}]({u})" if u else f"- {name}")
+
     return "\n".join(lines)
 
 
