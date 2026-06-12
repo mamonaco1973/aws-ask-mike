@@ -29,7 +29,7 @@ tracked per user in DynamoDB with a 500K lifetime cap.
 3. Worker Lambda (SQS trigger):
    - Loads corpus/embeddings.npy + corpus/chunks.json from S3
    - Embeds query via Bedrock Titan Embeddings v2
-   - Cosine similarity → top-5 chunks
+   - Cosine similarity → top-20 chunks (with per-repo coverage guarantee for named repos)
    - Fetches last 5 completed Q&A pairs from DynamoDB/S3 as history
    - Calls Bedrock Haiku with system prompt + history + context + question
    - Writes answer.txt + sources.json to S3
@@ -53,7 +53,7 @@ tracked per user in DynamoDB with a 500K lifetime cap.
 ### S3 layout
 
     corpus/chunks.json                                — chunk metadata array
-    corpus/embeddings.npy                             — float32 (n_chunks, 1536)
+    corpus/embeddings.npy                             — float32 (n_chunks, 1024)
     users/USER#<id>/conversations/CONV#<c>/QUERY#<q>/question.txt
     users/USER#<id>/conversations/CONV#<c>/QUERY#<q>/answer.txt
     users/USER#<id>/conversations/CONV#<c>/QUERY#<q>/sources.json

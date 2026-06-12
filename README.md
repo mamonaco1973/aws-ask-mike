@@ -37,8 +37,10 @@ no EC2 instances required.
 2. Users log in via **Amazon Cognito** and ask questions in a
    ChatGPT-style interface.
 3. Each question is embedded, compared against the corpus using cosine
-   similarity, and the top 5 matching chunks are injected as context into a
-   **Bedrock Claude Haiku** prompt.
+   similarity, and the top 20 matching chunks are injected as context into a
+   **Bedrock Claude Haiku** prompt. When the question explicitly names specific
+   repos, a per-repo coverage guarantee ensures each named repo gets at least
+   2 chunks regardless of cosine rank.
 4. The last 5 Q&A pairs from the conversation are included as history,
    making conversations stateful across turns.
 5. Answers are returned asynchronously via **SQS** — the frontend polls
@@ -60,7 +62,7 @@ User question
   → Worker Lambda triggered:
       load corpus/embeddings.npy + chunks.json from S3
       embed query → Titan v2
-      cosine search → top 5 chunks
+      cosine search → top 20 chunks (+ named-repo coverage guarantee)
       fetch last 5 Q&A pairs from S3/DynamoDB as history
       call Haiku with context + history
       write answer.txt + sources.json to S3
@@ -91,7 +93,7 @@ User question
 
 ```
 corpus/chunks.json                                    chunk metadata array
-corpus/embeddings.npy                                 float32 (n_chunks, 1024)
+corpus/embeddings.npy                                 float32 (n_chunks, 1024)  (Titan v2, 1024-dim)
 users/USER#<id>/conversations/CONV#<c>/QUERY#<q>/question.txt
 users/USER#<id>/conversations/CONV#<c>/QUERY#<q>/answer.txt
 users/USER#<id>/conversations/CONV#<c>/QUERY#<q>/sources.json
@@ -119,8 +121,8 @@ Optional: set `GITHUB_TOKEN` to raise the GitHub API rate limit from
 ## Deploy
 
 ```bash
-git clone https://github.com/mamonaco1973/aws-rag-demo.git
-cd aws-rag-demo
+git clone https://github.com/mamonaco1973/aws-ask-mike.git
+cd aws-ask-mike
 ./apply.sh
 ```
 
@@ -137,7 +139,7 @@ On success:
 
 ```
 =================================================================================
-  RAG Demo — Deployment validated!
+  Ask Mike — Deployment validated!
 =================================================================================
   App : https://rag-app-<hex>.s3-website-us-east-1.amazonaws.com/index.html
   API : https://<api-id>.execute-api.us-east-1.amazonaws.com
