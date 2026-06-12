@@ -114,6 +114,8 @@ ul { list-style: none; }
 .sidebar-link-btn svg { flex-shrink: 0; }
 .sidebar-link-btn--yt { color: #f87171; }
 .sidebar-link-btn--yt:hover { color: #fca5a5; }
+.sidebar-link-btn--li { color: #7dd3fc; }
+.sidebar-link-btn--li:hover { color: #bae6fd; }
 
 /* Conversation list */
 
@@ -712,11 +714,10 @@ ul { list-style: none; }
 #sidebar-toggle:hover { background: var(--bg-hover); }
 
 @media (min-width: 641px) {
-  html, body  { font-size: 16.5px; }
-  .msg-row    { padding: 6px 100px; }
-  #empty-state { padding: 40px 100px; }
-  .starter-grid { max-width: 100%; }
-  #input-bar  { padding: 12px 100px 20px; }
+  html, body    { font-size: 16.5px; }
+  .msg-row      { padding: 6px 100px; }
+  /* align starter grid with the input bar's max-width */
+  .starter-grid { max-width: var(--input-max); }
 }
 
 @media (max-width: 640px) {
