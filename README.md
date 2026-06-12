@@ -5,11 +5,13 @@ cloud reference architecture portfolio, YouTube channel, and open-source
 GitHub repos. Ask questions about architectures, compare cloud providers,
 or explore how any of the 100+ published projects were built.
 
+![webapp](webapp.png)
+
 Built on **AWS Lambda**, **Amazon API Gateway**, **Amazon DynamoDB**,
 **Amazon SQS**, **Amazon Bedrock**, and **Amazon S3** — fully serverless,
 no EC2 instances required.
 
-![webapp](webapp.png)
+![diagram](diagram.png)
 
 ## What You Can Ask
 
@@ -139,7 +141,7 @@ On success:
 
 ```
 =================================================================================
-  Ask Mike — Deployment validated!
+  RAG Demo — Deployment validated!
 =================================================================================
   App : https://rag-app-<hex>.s3-website-us-east-1.amazonaws.com/index.html
   API : https://<api-id>.execute-api.us-east-1.amazonaws.com
