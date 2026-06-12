@@ -55,3 +55,14 @@ variable "google_client_secret" {
   default     = ""
   sensitive   = true
 }
+
+# ================================================================================
+# Custom domain — leave empty to serve directly from CloudFront's default domain
+# When set, also set route53_zone_id to create ACM + DNS records automatically
+# ================================================================================
+
+variable "custom_domain" {
+  description = "Custom domain name (e.g. askmike.example.com). Leave empty to use CloudFront default domain. The parent hosted zone is looked up automatically."
+  type        = string
+  default     = ""
+}

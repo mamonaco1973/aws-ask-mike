@@ -58,7 +58,11 @@ cd 01-core || {
 }
 
 terraform init
-terraform destroy -auto-approve -var="bedrock_model_id=${BEDROCK_MODEL_ID}"
+terraform destroy -auto-approve \
+  -var="bedrock_model_id=${BEDROCK_MODEL_ID}" \
+  -var="google_client_id=${AWS_ASKMIKE_GOOGLE_CLIENT_ID:-}" \
+  -var="google_client_secret=${AWS_ASKMIKE_GOOGLE_CLIENT_SECRET:-}" \
+  -var="custom_domain=${AWS_ASKMIKE_CUSTOM_DOMAIN:-}"
 
 cd .. || exit 1
 

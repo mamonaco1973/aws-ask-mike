@@ -3,8 +3,9 @@
 # ================================================================================
 
 locals {
-  spa_origin          = "https://askmike.mikes-cloud-solutions.com"
-  identity_providers  = var.google_client_id != "" ? ["COGNITO", "Google"] : ["COGNITO"]
+  # Resolve origin at apply time — custom domain takes priority over CloudFront default
+  spa_origin         = var.custom_domain != "" ? "https://${var.custom_domain}" : "https://${aws_cloudfront_distribution.askmike.domain_name}"
+  identity_providers = var.google_client_id != "" ? ["COGNITO", "Google"] : ["COGNITO"]
 }
 
 # ================================================================================

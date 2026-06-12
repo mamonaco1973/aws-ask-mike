@@ -1,10 +1,28 @@
 # ================================================================================
+# Route53 zone lookup
+# Derives parent zone from custom_domain by stripping the first label.
+# e.g. "askmike.example.com" → looks up "example.com"
+# ================================================================================
+
+locals {
+  zone_name = var.custom_domain != "" ? join(".", slice(split(".", var.custom_domain), 1, length(split(".", var.custom_domain)))) : ""
+}
+
+data "aws_route53_zone" "askmike" {
+  count        = var.custom_domain != "" ? 1 : 0
+  name         = local.zone_name
+  private_zone = false
+}
+
+# ================================================================================
 # ACM Certificate
-# Must be in us-east-1 — CloudFront requires certificates in this region
+# Only created when custom_domain is set.
+# Must be in us-east-1 — CloudFront requires certificates in this region.
 # ================================================================================
 
 resource "aws_acm_certificate" "askmike" {
-  domain_name       = "askmike.mikes-cloud-solutions.com"
+  count             = var.custom_domain != "" ? 1 : 0
+  domain_name       = var.custom_domain
   validation_method = "DNS"
 
   lifecycle {
@@ -14,19 +32,20 @@ resource "aws_acm_certificate" "askmike" {
 
 # ================================================================================
 # Route53 DNS validation records
-# Zone ID is the mikes-cloud-solutions.com hosted zone
+# Only created when custom_domain is set.
 # ================================================================================
 
 resource "aws_route53_record" "askmike_cert_validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.askmike.domain_validation_options : dvo.domain_name => {
+  for_each = var.custom_domain != "" ? {
+    for dvo in aws_acm_certificate.askmike[0].domain_validation_options :
+    dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
     }
-  }
+  } : {}
 
-  zone_id         = "Z104804116GKVC6IA1EKC"
+  zone_id         = data.aws_route53_zone.askmike[0].zone_id
   name            = each.value.name
   type            = each.value.type
   records         = [each.value.record]
@@ -36,22 +55,25 @@ resource "aws_route53_record" "askmike_cert_validation" {
 
 # ================================================================================
 # Wait for ACM to validate before creating CloudFront distribution
+# Only created when custom_domain is set.
 # ================================================================================
 
 resource "aws_acm_certificate_validation" "askmike" {
-  certificate_arn         = aws_acm_certificate.askmike.arn
+  count                   = var.custom_domain != "" ? 1 : 0
+  certificate_arn         = aws_acm_certificate.askmike[0].arn
   validation_record_fqdns = [for r in aws_route53_record.askmike_cert_validation : r.fqdn]
 }
 
 # ================================================================================
 # CloudFront distribution
-# S3 website endpoint as HTTP origin — CloudFront provides TLS at the edge
+# Always created. Uses custom domain + ACM cert when custom_domain is set,
+# otherwise serves from the default *.cloudfront.net HTTPS domain.
 # ================================================================================
 
 resource "aws_cloudfront_distribution" "askmike" {
   enabled             = true
   default_root_object = "index.html"
-  aliases             = ["askmike.mikes-cloud-solutions.com"]
+  aliases             = var.custom_domain != "" ? [var.custom_domain] : []
 
   origin {
     domain_name = "${aws_s3_bucket.frontend.bucket}.s3-website-${var.region}.amazonaws.com"
@@ -102,22 +124,34 @@ resource "aws_cloudfront_distribution" "askmike" {
     }
   }
 
-  viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate_validation.askmike.certificate_arn
-    ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2021"
+  # Custom domain: use ACM certificate
+  dynamic "viewer_certificate" {
+    for_each = var.custom_domain != "" ? [1] : []
+    content {
+      acm_certificate_arn      = aws_acm_certificate_validation.askmike[0].certificate_arn
+      ssl_support_method       = "sni-only"
+      minimum_protocol_version = "TLSv1.2_2021"
+    }
   }
 
-  depends_on = [aws_acm_certificate_validation.askmike]
+  # No custom domain: use CloudFront's default *.cloudfront.net certificate
+  dynamic "viewer_certificate" {
+    for_each = var.custom_domain == "" ? [1] : []
+    content {
+      cloudfront_default_certificate = true
+    }
+  }
 }
 
 # ================================================================================
 # Route53 A alias record → CloudFront distribution
+# Only created when custom_domain is set.
 # ================================================================================
 
 resource "aws_route53_record" "askmike" {
-  zone_id = "Z104804116GKVC6IA1EKC"
-  name    = "askmike.mikes-cloud-solutions.com"
+  count   = var.custom_domain != "" ? 1 : 0
+  zone_id = data.aws_route53_zone.askmike[0].zone_id
+  name    = var.custom_domain
   type    = "A"
 
   alias {
@@ -132,7 +166,7 @@ resource "aws_route53_record" "askmike" {
 # ================================================================================
 
 output "custom_domain_url" {
-  value = "https://askmike.mikes-cloud-solutions.com"
+  value = var.custom_domain != "" ? "https://${var.custom_domain}" : "https://${aws_cloudfront_distribution.askmike.domain_name}"
 }
 
 output "cloudfront_distribution_id" {

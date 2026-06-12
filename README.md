@@ -128,6 +128,15 @@ cd aws-ask-mike
 ./apply.sh
 ```
 
+By default the app deploys behind CloudFront using the free `*.cloudfront.net`
+HTTPS domain — no domain name required. To use a custom domain, set two
+Terraform variables before deploying:
+
+```bash
+# terraform.tfvars (or export as TF_VAR_* env vars)
+custom_domain = "askmike.example.com"
+```
+
 `apply.sh` performs these steps in order:
 
 1. Validates environment and AWS credentials (`check_env.sh`)
