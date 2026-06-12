@@ -53,6 +53,8 @@ supports up to 100 concurrent users.
 
 ## Architecture
 
+![architecture](aws-ask-mike.png)
+
 ### Request Flow
 
 ```
