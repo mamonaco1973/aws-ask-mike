@@ -169,7 +169,6 @@ already exists in S3. To force a full re-ingest:
 
 ```bash
 aws s3 rm s3://<backend-bucket>/corpus/chunks.json
-./apply.sh
 ```
 
 To run ingestion manually:
