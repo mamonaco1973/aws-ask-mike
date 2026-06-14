@@ -129,7 +129,6 @@ Optional: set `GITHUB_TOKEN` to raise the GitHub API rate limit from
 ```bash
 git clone https://github.com/mamonaco1973/aws-ask-mike.git
 cd aws-ask-mike
-./apply.sh
 ```
 
 By default the app deploys behind CloudFront using the free `*.cloudfront.net`
@@ -169,7 +168,6 @@ already exists in S3. To force a full re-ingest:
 
 ```bash
 aws s3 rm s3://<backend-bucket>/corpus/chunks.json
-./apply.sh
 ```
 
 To run ingestion manually:
