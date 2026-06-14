@@ -28,10 +28,10 @@ from boto3.dynamodb.conditions import Attr
 
 table = boto3.resource("dynamodb").Table(os.environ["TABLE_NAME"])
 
-TOKEN_LIMIT_DEFAULT = 500_000
+TOKEN_LIMIT_DEFAULT = 250_000
 
 # Hard cap — registration is rejected once this many user records exist
-USER_CAP = 100
+USER_CAP = 500
 
 
 # ------------------------------------------------------------------------------
