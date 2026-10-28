@@ -19,7 +19,7 @@ is serverless.
 | **rag-query-requests-&lt;hex&gt;** | SQS | 6 min visibility, 4 day retention; one receive, then `rag-query-requests-dlq` (14 days) |
 | **rag-worker-&lt;hex&gt;** | Lambda | Python 3.11 with a numpy layer, 512 MB, 300 s; triggered one message at a time |
 | **rag-data-&lt;hex&gt;** | S3 | `corpus/chunks.json` and `corpus/embeddings.npy` (float32, 1024 dimensions), plus each query's question, answer and sources |
-| **DynamoDB** | us-east-1 | single table: `USER#USAGE` (tokens, 500K limit), `CONV#` and `QUERY#` items |
+| **DynamoDB** | us-east-1 | single table: `USER#USAGE` (tokens used and limit), `CONV#` and `QUERY#` items |
 | **Bedrock** | us-east-1 | `us.anthropic.claude-haiku-4-5-20251001-v1:0` and `amazon.titan-embed-text-v2:0` |
 
 ## Architecture
@@ -94,7 +94,7 @@ All routes need `Authorization: Bearer <Cognito JWT>`.
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| POST | `/register` | Idempotent first-login registration; enforces 100-user cap |
+| POST | `/register` | Idempotent first-login registration; enforces the 500-user cap |
 | GET | `/usage` | Return `tokens_used` and `token_limit` for the authenticated user |
 
 ### Query Status Values
@@ -114,7 +114,7 @@ All routes need `Authorization: Bearer <Cognito JWT>`.
 | 503 | Corpus not yet ingested |
 | 403 | User cap reached |
 
-Each user has a 500K-token lifetime budget. To reset or raise it, edit
+Each user gets a 250K-token lifetime budget when they register. To reset or raise it, edit
 `tokens_used` or `token_limit` on the user's `USER#<id>` / `USER#USAGE` item
 in DynamoDB.
 
@@ -205,8 +205,12 @@ dimensions (1024) to keep the corpus and query vectors compatible.
 
 ## Notes
 
-- **Lab only.** Anyone can sign up, up to the 100-user cap.
+- **Lab only.** Anyone can sign up, up to the 500-user cap.
 - `.claude/settings.local.json` is committed; it's a local Claude Code
   permissions file, not part of the app.
 - `diagram.png` and `pipeline.png`, the earlier illustrated diagrams, are
   still in the repository but no longer shown here.
+- The token limit is set in two places: `users.py` writes 250,000 on
+  registration and `conversations.py` falls back to 500,000 only for a
+  record without a limit, so 250,000 is what applies. (The old README said
+  500K and 100 users; the code caps at 500 users.)
